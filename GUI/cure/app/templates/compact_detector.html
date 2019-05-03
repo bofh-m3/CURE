@@ -1,0 +1,61 @@
+{% for event in events %}
+    {% if event.detectorid == detector.detectorid %}
+
+
+{% if event.snoozedby == None and event.status != "green" %}
+    <div class="compactbox {{ event.status }} shadow" id="{{ detector.detectorid }}">
+    {% if current_user.is_authenticated %}
+        <p class="comp_title"><a class="titlelink" href="/description/{{ detector.detectorid }}">{{ detector.detectorname }}</a>
+
+        {% else %}
+        <p class="comp_title">{{ detector.detectorname }}
+        {% endif %}
+
+        {% if current_user.is_authenticated %}
+        <a class="comp_detector" style="text-decoration: none;" href="#" onclick="snoozeEvent({{ event.eventid }});return window.location.assign('/view/compact');"><i class="fa fa-cog fa-lg snooze"></i></a>
+        {% endif %}
+    </p>
+</div>
+
+    {% if event.status == "red" %}
+        <script>
+        var soundCheck = checkCookie()
+        if (soundCheck === "false") {
+        RedAlert.play()
+        }
+        </script>
+    {% endif %}
+
+{%  elif event.snoozedby and event.status != "green" %}
+    <div class="compactbox green shadow" id="{{ detector.detectorid }}">
+       {% if current_user.is_authenticated %}
+        <p class="comp_title"><a class="titlelink" href="/description/{{ detector.detectorid }}">{{ detector.detectorname }}</a>
+        {% else %}
+        <p class="comp_title">{{ detector.detectorname }}
+        {% endif %}
+
+
+
+    {% if current_user.is_authenticated %}
+        <a class="comp_detector" style="text-decoration: none; font-size: 12px" href="#" onclick="UnSnoozeEvent({{ event.eventid }});return window.location.assign('/view/compact');"><i class="fa fa-lock snooze"> {{ event.snoozedby }} {{ moment(event.snoozets).fromNow() }}</i></a>
+    {% endif %}
+    </p>
+    </div>
+    </div>
+{%  else %}
+    <div class="compactbox green shadow" id="{{ detector.detectorid }}">
+       {% if current_user.is_authenticated %}
+        <p class="comp_title"><a class="titlelink" href="/description/{{ detector.detectorid }}">{{ detector.detectorname }}</a>
+        {% else %}
+        <p class="comp_title">{{ detector.detectorname }}
+        {% endif %}
+
+    </p>
+
+
+    </div>
+    {%  endif %}
+
+{% endif %}
+{% endfor %}
+

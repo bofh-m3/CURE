@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if current_user.is_authenticated %}
+{% if event %}
+    <div class="description datagrid" style="margin-top: 70px">
+        <h3><a class="todesc bold" href="/description/{{ detector.detectorid }}">&larr; Return to {{ detector.detectorname }} Description</a></h3>
+    <table class="info-table sortable rgb" id="info-table"><thead id="history"><td class="bold">id</td><td class="bold">timestamp</td><td class="bold">status</td><td class="bold">event</td></thead><tbody>
+    {%  for e in event %}
+        <tr>
+        <td>{{ e.eventid }}</td>
+        <td>{{ e.datetime }}</td>
+        <td>{{ e.status }}</td>
+        <td>{{ e.eventshort }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="nodescription">
+        No History
+    </div>
+{% endif %}
+    {% endif %}
+{% endblock %}

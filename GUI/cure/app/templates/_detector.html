@@ -1,0 +1,73 @@
+{% for event in events %}
+    {% if event.detectorid == detector.detectorid %}
+
+
+{% if event.snoozedby == None and event.status != "green" %}
+    <div class="box {{ event.status }} shadow" id="{{ detector.detectorid }}">
+    {% if current_user.is_authenticated %}
+        <p class="det_title"><a class="titlelink" href="description/{{ detector.detectorid }}">{{ detector.detectorname }}</a></p>
+        {% else %}
+        <p class="det_title">{{ detector.detectorname }}</p>
+        {% endif %}
+    <hr class="divider">
+    <p class="det_info">
+
+{% set allEvents = event.eventshort.split(',') %}
+{% for oneEvent in allEvents %}
+    {{ oneEvent }}<br>
+{% endfor %}
+    </p>
+        {% if current_user.is_authenticated %}
+        <div class="snooze"><p class="dashed"><a class="detector" style="text-decoration: none;" href="#" onclick="snoozeEvent({{ event.eventid }});return window.location.assign('/index');"><i class="fa fa-cog fa-lg snooze"></i></a></div>
+        {% endif %}
+    </div>
+    {% if event.status == "red" %}
+        <script>
+        var soundCheck = checkCookie()
+        if (soundCheck === "false") {
+        RedAlert.play()
+        }
+        </script>
+    {% endif %}
+
+{%  elif event.snoozedby and event.status != "green" %}
+    <div class="box green shadow" id="{{ detector.detectorid }}">
+       {% if current_user.is_authenticated %}
+        <p class="det_title"><a class="titlelink" href="description/{{ detector.detectorid }}">{{ detector.detectorname }}</a></p>
+        {% else %}
+        <p class="det_title">{{ detector.detectorname }}</p>
+        {% endif %}
+    <hr class="divider">
+    <p class="det_info">
+
+    {% set allEvents = event.eventshort.split(',') %}
+    {% for oneEvent in allEvents %}
+        {{ oneEvent }}<br>
+    {% endfor %}
+
+    </p>
+    {% if current_user.is_authenticated %}
+        <div class="snooze"><p class="dashed"><a class="detector" style="text-decoration: none; font-size: 12px" href="#" onclick="UnSnoozeEvent({{ event.eventid }});return window.location.assign('/index');"><i class="fa fa-lock snooze"> {{ event.snoozedby }} {{ moment(event.snoozets).fromNow() }}</i></a></div>
+    {% endif %}
+    </div>
+{%  else %}
+    <div class="box green shadow" id="{{ detector.detectorid }}">
+       {% if current_user.is_authenticated %}
+        <p class="det_title"><a class="titlelink" href="description/{{ detector.detectorid }}">{{ detector.detectorname }}</a></p>
+        {% else %}
+        <p class="det_title">{{ detector.detectorname }}</p>
+        {% endif %}
+    <hr class="divider">
+    <p class="det_info">
+    {% set allEvents = event.eventshort.split(',') %}
+        {% for oneEvent in allEvents %}
+            {{ oneEvent }}<br>
+        {% endfor %}
+    </p>
+
+    </div>
+    {%  endif %}
+
+{% endif %}
+{% endfor %}
+

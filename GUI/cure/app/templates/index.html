@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+{% endblock %}
+{% block content %}
+    <div class="container" style="margin-top: 70px">
+<!-- <div class="mainframe"> -->
+<div class="wrapper2">
+        {% for detector in detectors %}
+        {% include '_detector.html' %}
+        {% endfor %}
+</div>
+</div>
+<script type="text/javascript">
+  setInterval("refresh_page();",60000);
+
+    function refresh_page(){
+        window.location = location.href;
+    }
+</script>
+{% endblock %}

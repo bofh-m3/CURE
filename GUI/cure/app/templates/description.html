@@ -1,0 +1,316 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if current_user.is_authenticated %}
+<div class="ErrorDisc datagrid" style="margin-top: 70px">
+<button class="collapsible det_h1">{{ detector.detectorname }}</button>
+    <div class="content">
+        <table style="width:100%">
+            <tr><td>Id</td><td>{{ detector.detectorid }}</td></tr>
+            <tr><td><i style="color: #f44336" class="fa fa-heart"></i></td><td>{{ detector.heartbeatts }}</td></tr>
+            <tr><td>Area</td><td>{{ detector.area }}</td></tr>
+            <tr><td>Active</td><td>{{ detector.isactive }}</td></tr>
+            <tr><td>Environment</td><td>{{ detector.detectorenvironment }}</td>  </tr>
+            <tr><td>ContentType</td><td>{{ description.contenttype }}</td></tr>
+            <tr><td>Status</td><td class="{{ event.status }}">{{ event.status }}</td></tr>
+            <tr><td>History</td><td><a class="tohist bold" href="/history/{{ detector.detectorid }}">View</a></td></tr>
+        </table>
+    </div>
+</div>
+<script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+</script>
+    <!-- If Zendesk -->
+{% if detector.detectorname == "Zendesk" %}
+<script>
+$(document).ready(function() {
+    $('#info-table th').each(function () {
+        if ($(this).text() == 'id') {
+            headerIndex = $(this).index();
+        }
+    })
+    var rows = document.getElementById("info-table").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+    var headers = document.getElementById("info-table").getElementsByTagName("thead")[0].getElementsByTagName("th").length;
+    var i;
+    if (rows > 1 && headers > 1) {
+    for (i = 0; i < rows+1; i++) {
+        var link = $("#info-table tr:eq("+i+") td:eq(" + headerIndex + ")").text();
+        var url = "<a class='det_link' target='blank' href='https://myzendesk.zendesk.com/agent/tickets/" + link + "'>" + link + "</a>";
+        $("#info-table tr:eq("+i+") td:eq(" + headerIndex + ")").html(url)
+        }
+    }
+    if (headers == 1) {
+    $('#info-table th').each(function(){
+        if ($(this).text() == 'id') {
+            var link = $(this).next().text();
+            var url = "<a class='det_link' target='blank' href='https://myzendesk.zendesk.com/agent/tickets/" + link + "'>" + link + "</a>";
+            $(this).next().html(url);
+        }})
+
+    }
+});
+</script>
+{% endif %}
+
+    <!-- If Redmine Issues -->
+{% if detector.detectorname == "Redmine Issues" %}
+<script>
+$(document).ready(function() {
+    $('#info-table th').each(function () {
+        if ($(this).text() == 'id') {
+            headerIndex = $(this).index();
+        }
+    })
+    var rows = document.getElementById("info-table").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+    var headers = document.getElementById("info-table").getElementsByTagName("thead")[0].getElementsByTagName("th").length;
+    var i;
+    if (rows > 1 && headers > 1) {
+    for (i = 0; i < rows+1; i++) {
+        var link = $("#info-table tr:eq("+i+") td:eq(" + headerIndex + ")").text();
+        var url = "<a class='det_link' target='blank' href='https://redmine.company.xx/issues/" + link + "'>" + link + "</a>";
+        $("#info-table tr:eq("+i+") td:eq(" + headerIndex + ")").html(url)
+        }
+    }
+    if (headers == 1) {
+    $('#info-table th').each(function(){
+        if ($(this).text() == 'id') {
+            var link = $(this).next().text();
+            var url = "<a class='det_link' target='blank' href='https://redmine.company.xx/issues/" + link + "'>" + link + "</a>";
+            $(this).next().html(url);
+        }})
+
+    }
+});
+</script>
+{% endif %}
+
+
+
+    <!-- If Netskope -->
+{% if detector.detectorname == "Netskope" %}
+<script>
+$(document).ready(function() {
+    $('#info-table th').each(function () {
+        if ($(this).text() == 'object') {
+            headerIndex = $(this).index();
+        }
+    })
+    var rows = document.getElementById("info-table").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+    var headers = document.getElementById("info-table").getElementsByTagName("thead")[0].getElementsByTagName("th").length;
+    var i;
+    if (rows > 1 && headers > 1) {
+    for (i = 0; i < rows+1; i++) {
+        var link = $("#info-table tr:eq("+i+") td:eq(" + headerIndex + ")").text();
+        var query = "(acked%20eq%20%27false%27)%20and%20object%20like%20%27" + link + "%27&queryType=1";
+        var query = query.replace(/~/,'')
+        var url = "https://company.netsckope.com/ns#/alerts?query=" + query;
+        var href = "<a class='det_link' target='blank' href='" + url + "'>" + link + "</a>";
+        $("#info-table tr:eq("+i+") td:eq(" + headerIndex + ")").html(href)
+        }
+    }
+    if (headers == 1) {
+    $('#info-table th').each(function(){
+        if ($(this).text() == 'object') {
+            var link = $(this).next().text();
+            var query = "(acked%20eq%20%27false%27)%20and%20object%20like%20%27" + link + "%27&queryType=1";
+            var query = query.replace(/~/,'')
+            var url = "https://company.netskope.com/ns#/alerts?query=" + query;
+            var href = "<a class='det_link' target='blank' href='" + url + "'>" + link + "</a>";
+            $(this).next().html(href);
+        }})
+
+    }
+});
+</script>
+{% endif %}
+
+
+            <!-- If CBD Endpoints -->
+{% if detector.detectorname == "CBD Endpoints" %}
+<script>
+$(document).ready(function() {
+    $('#info-table th').each(function () {
+        if ($(this).text() == 'Device') {
+            headerIndex = $(this).index();
+        }
+    })
+    var rows = document.getElementById("info-table").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+    var headers = document.getElementById("info-table").getElementsByTagName("thead")[0].getElementsByTagName("th").length;
+    var i;
+    if (rows > 1 && headers > 1) {
+    for (i = 0; i < rows+1; i++) {
+        var link = $("#info-table tr:eq("+i+") td:eq(" + headerIndex + ")").text();
+        var url = "<a class='det_link' target='blank' href='https://defense-eu.conferdeploy.net/settings/enrollment?s[maxRows]=20&s[fromRow]=1&s[version]=1&s[sortDefinition][fieldName]=TIME&s[sortDefinition][sortOrder]=DESC&s[c][DEVICE_STATUS][0]=all&s[c][TARGET_PRIORITY][0]=LOW&s[c][TARGET_PRIORITY][1]=MEDIUM&s[c][TARGET_PRIORITY][2]=HIGH&s[c][TARGET_PRIORITY][3]=MISSION_CRITICAL&s[c][QUERY_STRING_TYPE][0]=" + link + "'>" + link + "</a>";
+        $("#info-table tr:eq("+i+") td:eq(" + headerIndex + ")").html(url)
+        }
+    }
+    if (headers == 1) {
+    $('#info-table th').each(function(){
+        if ($(this).text() == 'Device') {
+            var link = $(this).next().text();
+            var url = "<a class='det_link' target='blank' href='https://defense-eu.conferdeploy.net/settings/enrollment?s[maxRows]=20&s[fromRow]=1&s[version]=1&s[sortDefinition][fieldName]=TIME&s[sortDefinition][sortOrder]=DESC&s[c][DEVICE_STATUS][0]=all&s[c][TARGET_PRIORITY][0]=LOW&s[c][TARGET_PRIORITY][1]=MEDIUM&s[c][TARGET_PRIORITY][2]=HIGH&s[c][TARGET_PRIORITY][3]=MISSION_CRITICAL&s[c][QUERY_STRING_TYPE][0]=" + link + "'>" + link + "</a>";
+            $(this).next().html(url);
+        }})
+
+    }
+});
+</script>
+{% endif %}
+
+
+
+    <!-- If Printers -->
+{% if detector.detectorname == "Printers" %}
+<script>
+$(document).ready(function() {
+    $('#info-table th').each(function () {
+        if ($(this).text() == 'printer') {
+            headerIndex = $(this).index();
+        }
+    })
+    var rows = document.getElementById("info-table").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+    var i;
+    for (i = 0; i < rows+1; i++) {
+        var link = $("#info-table tr:eq("+i+") td:eq(" + headerIndex + ")").text();
+        var url = "<a class='det_link' target='blank' href='http://" + link + ".co.int'>" + link + "</a>";
+        $("#info-table tr:eq("+i+") td:eq(" + headerIndex + ")").html(url)
+    }
+});
+</script>
+{% endif %}
+
+
+
+
+            <!-- If Zoho Desk -->
+{% if detector.detectorname == "Zoho Desk" %}
+<script>
+$(document).ready(function() {
+    $('#info-table th').each(function () {
+        if ($(this).text() == 'subject') {
+            headerIndex = $(this).index();
+        }
+    })
+    var rows = document.getElementById("info-table").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+    var headers = document.getElementById("info-table").getElementsByTagName("thead")[0].getElementsByTagName("th").length;
+    var i;
+    if (rows > 1 && headers > 1) {
+        for (i = 0; i < rows + 1; i++) {
+            var link = $("#info-table tr:eq(" + i + ") td:eq(" + headerIndex + ")").text();
+            var query = encodeURI(link);
+            var url = "https://zoho.company.xx/support/creuna/ShowHomePage.do#Cases/search/CurDep/" + query;
+            var href = "<a class='det_link' target='blank' href='" + url + "'>" + link + "</a>";
+            $("#info-table tr:eq(" + i + ") td:eq(" + headerIndex + ")").html(href)
+        }
+    }
+    if (headers == 1) {
+    $('#info-table th').each(function(){
+        if ($(this).text() == 'subject') {
+            var link = $(this).next().text();
+            var query = encodeURI(link);
+            var url = "https://zoho.company.xx/support/creuna/ShowHomePage.do#Cases/search/CurDep/" + query;
+            var href = "<a class='det_link' target='blank' href='" + url + "'>" + link + "</a>";
+            $(this).next().html(href);
+        }})
+
+    }
+});
+
+</script>
+{% endif %}
+
+
+            <!-- If Slack health -->
+{% if detector.detectorname == "Slack Health" %}
+<script>
+$(document).ready(function() {
+    $('#info-table th').each(function () {
+        if ($(this).text() == 'status') {
+            headerIndex = $(this).index();
+        }
+    })
+    var rows = document.getElementById("info-table").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+    var headers = document.getElementById("info-table").getElementsByTagName("thead")[0].getElementsByTagName("th").length;
+    var i;
+    if (rows > 1 && headers > 1) {
+        for (i = 0; i < rows + 1; i++) {
+            var link = $("#info-table tr:eq(" + i + ") td:eq(" + headerIndex + ")").text();
+            var url = "https://status.slack.com/";
+            var href = "<a class='det_link' target='blank' href='" + url + "'>" + link + "</a>";
+            $("#info-table tr:eq(" + i + ") td:eq(" + headerIndex + ")").html(href)
+        }
+    }
+    if (headers == 1) {
+    $('#info-table th').each(function(){
+        if ($(this).text() == 'status') {
+            var link = $(this).next().text();
+            var url = "https://status.slack.com/";
+            var href = "<a class='det_link' target='blank' href='" + url + "'>" + link + "</a>";
+            $(this).next().html(href);
+        }})
+
+    }
+});
+
+</script>
+{% endif %}
+
+                    <!-- If vCenter Alarm -->
+{% if detector.detectorname == "vCenter Alarm" %}
+<script>
+$(document).ready(function() {
+    $('#info-table th').each(function () {
+        if ($(this).text() == 'Entity') {
+            headerIndex = $(this).index();
+        }
+    })
+    var rows = document.getElementById("info-table").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+    var headers = document.getElementById("info-table").getElementsByTagName("thead")[0].getElementsByTagName("th").length;
+    var i;
+    if (rows > 1 && headers > 1) {
+        for (i = 0; i < rows + 1; i++) {
+            var link = $("#info-table tr:eq(" + i + ") td:eq(" + headerIndex + ")").text();
+            var url = "https://vcenter.company.xx/ui/#?extensionId=vsphere.core.search.domainView&query=" + link + "&searchType=simple";
+            var href = "<a class='det_link' target='blank' href='" + url + "'>" + link + "</a>";
+            $("#info-table tr:eq(" + i + ") td:eq(" + headerIndex + ")").html(href)
+        }
+    }
+    if (headers == 1) {
+    $('#info-table th').each(function(){
+        if ($(this).text() == 'Entity') {
+            var link = $(this).next().text();
+            var url = "https://vcenter.company.xx/ui/#?extensionId=vsphere.core.search.domainView&query=" + link + "&searchType=simple";
+            var href = "<a class='det_link' target='blank' href='" + url + "'>" + link + "</a>";
+            $(this).next().html(href);
+        }})
+
+    }
+});
+
+</script>
+{% endif %}
+
+
+{% if description.contenttype == "json" %}
+    <div class="description datagrid">
+        {{ info|safe }}
+    </div>
+{% else %}
+    <div class="nodescription">
+        {{ info|safe }}
+    </div>
+{% endif %}
+    {% endif %}
+{% endblock %}

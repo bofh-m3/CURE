@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert" role="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+<form action="" method="post" novalidate>
+<div class="login">
+    <div class="login-screen">
+        <div class="app-title">
+				<h1>Sign in required</h1>
+        </div>
+    {{ form.hidden_tag() }}
+<div class="login-form">
+    <div class="control-group">
+        {{ form.username.label }}<br>
+        {{ form.username(size=32,class_="login-field") }}
+</div>
+<div class="control-group">
+        {{ form.password.label }}<br>
+        {{ form.password(size=32,class_="login-field") }}
+</div>
+    <div class="control-group">
+    {{ form.remember_me() }}{{ form.remember_me.label }}<br>
+    {{ form.submit(class_="btn") }}<br>
+    </div>
+    </div>
+		</div>
+	</div>
+</form>
+{% endblock %}
