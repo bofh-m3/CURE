@@ -51,7 +51,7 @@ $report = @()
 foreach ($printer in $printers.keys)
 {
   $HTML=$null
-  $result = "" | select @{n="printer";e={$printer -replace '.co.int'}},`
+  $result = "" | select @{n="printer";e={$printer}},`
    @{n="status";e={"grey"}},`
    @{n="model";e={$($printers.$printer)}},`
    @{n="black";e={$null}},`
